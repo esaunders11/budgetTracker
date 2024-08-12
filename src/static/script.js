@@ -12,13 +12,15 @@ let uname = login[0];
 let psw = login[1];
 let loginBtn = document.querySelector(".loginBtn");
 
-let data = {}
 
 
+let data = {};
 populate();
 addWeeks();
 
+
 loginBtn.addEventListener("click", ()=>{
+ 
     data.username = uname.value;
     data.password = psw.value;
 });
@@ -33,19 +35,20 @@ function populate(){
 }
 
 function addWeeks(){
+    data.purchases = {}
     for (let i = 1; i < 53; i++) {
         let s = `week${i}`;
-        data[s] = {};
+        data.purchases[s] = {};
     }
 }
 
 function addExpense(week, pur, pri){
-    data[week][pur] = pri;
+    data.purchases[week][pur] = pri;
 }
 
 function getTotal(week){
     let total = 0;
-    for (const val of Object.values(data[week])) {
+    for (const val of Object.values(data.purchases[week])) {
         total += val;
     }
     return total
@@ -53,7 +56,7 @@ function getTotal(week){
 
 function displayBudget(week){
     let output = ""
-    for (const [key, value] of Object.entries(data[week])) {
+    for (const [key, value] of Object.entries(data.purchases[week])) {
         output += `${key}: $${value}<br>`;
     }
     out1.innerHTML = `${output}`;
@@ -73,6 +76,7 @@ addBtn.addEventListener("click", ()=>{
     else {
         addExpense(week, purchase, price);
         displayBudget(week);
+        
     }
 });
 
@@ -80,4 +84,5 @@ selects.forEach(s=>s.addEventListener("change", ()=>{
     out1.innerHTML = '';
     out2.innerHTML = '';
 }));
+
 
