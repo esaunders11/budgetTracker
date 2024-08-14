@@ -12,10 +12,10 @@
         <form class="modal-content animate">
             <div class="login">
                 <label for="uname"><b>Username</b></label>
-                <input class="loginInput" type="text" placeholder="Enter Username" name="uname" required>
+                <input class="loginInput" type="text" placeholder="Enter Username" name="uname" value="{{'uname if uname'}}" required>
 
                 <label for="psw"><b>Password</b></label>
-                <input class="loginInput" type="password" placeholder="Enter Password" name="psw" required>
+                <input class="loginInput" type="password" placeholder="Enter Password" name="psw" value="{{psw if psw}}" required>
 
                 <button type="submit" style="width:100%;">Login</button>
             </div>

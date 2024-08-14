@@ -13,26 +13,30 @@ app.permanent_session_lifetime = timedelta(minutes=5)
 db = SQLAlchemy(app)
 
 class users(db.Model):
-    _id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     uname = db.Column(db.String(100))
     psw = db.Column(db.String(100))
-    purchases = db.Column(db.purchases())
+    purchases = db.relationship('purchases', backref='users')
 
     def __init__(self, uname, psw):
         self.uname = uname
         self.psw = psw
 
 class purchases(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     week = db.Column(db.Integer)
-    expenses = db.Column(db.expenses())
+    users_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    expenses = db.relationship('expenses', backref="purchases")
 
     def __init__(self, week, expenses):
         self.week = week
         self.expenses = expenses
 
-class expenses(db.Modle):
+class expenses(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     item = db.Column(db.String(100))
     price = db.Column(db.Integer)
+    purchases_id = db.Column(db.Integer, db.ForeignKey('purchases.id'))
 
     def __init__(self, item, price):
         self.item = item
@@ -49,13 +53,12 @@ def page():
 def login():
     if request.method == "POST":
         session.permanent = True
-        user = request.form[""]
+        user = request.form["uname"]
         session["user"] = user
 
         found_user = users.query.filter_by(name=user).first()
         if found_user:
-            session["data"] = found_user.purchases
-        else:
+            session["data"] = found_user
             usr = users(user, "")
             db.session.add(usr)
             db.session.commit()
@@ -84,5 +87,6 @@ def user():
 
 
 if __name__ == "__main__":
-    db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
